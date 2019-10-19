@@ -1,13 +1,12 @@
 package vista;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import services.Archivo;
 
 public class app extends javax.swing.JFrame {
 
@@ -162,6 +161,7 @@ public class app extends javax.swing.JFrame {
         try {
             if (archivo != null) {
                 salvarArchivo();
+                repaint();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,26 +170,15 @@ public class app extends javax.swing.JFrame {
 
     public void salvarArchivo() throws Exception {
         try {
-            if (archivo != null) {
-                BufferedWriter writer = Files
-                        .newBufferedWriter(
-                                archivo.toPath(),
-                                StandardOpenOption.TRUNCATE_EXISTING
-                        );
-                writer.write(inptTextoBat.getText());
-                writer.flush();
-                writer.close();
-                repaint();
-            }
+            Archivo.salvarArchivo(archivo, inptTextoBat.getText());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
     private void btnCorrerBatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCorrerBatActionPerformed
         if (archivo != null) {
             try {
+//                Archivo.leerEntradas(archivo, inptTextoBat.getText());
                 salvarArchivo();
 
                 pb = new ProcessBuilder(archivo.getAbsolutePath());
