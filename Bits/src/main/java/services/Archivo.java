@@ -12,14 +12,14 @@ public class Archivo {
     public static void salvarArchivo(File archivoGuardar, String codigo) throws Exception {
         try {
             if (archivoGuardar != null) {
-                BufferedWriter writer = Files
+                try (BufferedWriter writer = Files
                         .newBufferedWriter(
                                 archivoGuardar.toPath(),
-                                StandardOpenOption.TRUNCATE_EXISTING
-                        );
-                writer.write(codigo);
-                writer.flush();
-                writer.close();
+                                archivoGuardar.exists() ? StandardOpenOption.TRUNCATE_EXISTING : StandardOpenOption.CREATE
+                        )) {
+                    writer.write(codigo);
+                    writer.flush();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,7 +40,7 @@ public class Archivo {
                 codigoTemporal += linea + "\n";
 
             }
-            System.out.println("Código Temporal: "+codigoTemporal);
+//            System.out.println("Código Temporal: " + codigoTemporal);
 
             salvarArchivo(archivo, codigoTemporal);
         } catch (Exception e) {
