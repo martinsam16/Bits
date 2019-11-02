@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import javax.swing.JOptionPane;
 
 public class Archivo {
 
@@ -26,16 +28,21 @@ public class Archivo {
 
     public static void leerEntradas(File archivo, String codigo) throws Exception {
         try {
+            String codigoTemporal = "";
             for (String linea : codigo.split("\n")) {
                 //set /p id="Enter ID: "
                 if (linea.contains("set /p ")) {
-                    System.out.println(linea.substring(linea.indexOf("set /p ")));
-                    System.out.println("indice: " + linea.indexOf("set /p "));
+                    linea = linea.replaceAll("/p", "");
+                    String inp = linea.substring(linea.indexOf("\""));
+                    String leido = JOptionPane.showInputDialog(null, inp, "c:", JOptionPane.OK_OPTION);
+                    linea = linea.replaceAll(inp, leido);
                 }
+                codigoTemporal += linea + "\n";
+
             }
+            System.out.println("Código Temporal: "+codigoTemporal);
 
-            salvarArchivo(archivo, codigo);
-
+            salvarArchivo(archivo, codigoTemporal);
         } catch (Exception e) {
             e.printStackTrace();
         }
